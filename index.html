@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>PageRank Visualizer — Matrix Eigenvalues × Google's PageRank</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Source+Serif+4:opsz,wght@8..60,400;8..60,600;8..60,700&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet" />
+<link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+
+  <header class="site-header">
+    <div class="wrap">
+      <h1 class="site-title">PageRank Visualizer</h1>
+      <p class="site-subtitle">Matrix eigenvalues × Google's PageRank</p>
+    </div>
+  </header>
+
+  <main class="wrap">
+
+    <!-- ===================== GRAPH BUILDER ===================== -->
+    <section class="panel panel--graph" aria-labelledby="graph-heading">
+      <div class="panel-head">
+        <div>
+          <h2 id="graph-heading" class="panel-title">Graph builder</h2>
+          <p class="panel-lede">Build a network of webpages by adding pages and drawing directed links between them.</p>
+        </div>
+      </div>
+
+      <div class="toolbar">
+        <button type="button" class="btn" id="btn-add-page">+ Add page</button>
+        <button type="button" class="btn" id="btn-link-mode" aria-pressed="false">Add link</button>
+        <button type="button" class="btn" id="btn-example">Load example</button>
+        <button type="button" class="btn btn--ghost" id="btn-clear">Clear</button>
+        <div class="toolbar-spacer"></div>
+        <button type="button" class="btn btn--primary" id="btn-calculate">Calculate PageRank</button>
+      </div>
+
+      <p class="hint" id="mode-hint" hidden>Select a source page, then a destination page, to create a link.</p>
+
+      <div class="graph-stage">
+        <svg id="graph-svg" viewBox="0 0 900 460" role="img" aria-label="Directed graph of webpages">
+          <defs>
+            <marker id="arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+              <path d="M 0 0 L 10 5 L 0 10 z" class="arrow-head"></path>
+            </marker>
+            <marker id="arrow-accent" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+              <path d="M 0 0 L 10 5 L 0 10 z" class="arrow-head arrow-head--accent"></path>
+            </marker>
+          </defs>
+          <g id="grid-layer"></g>
+          <g id="edge-layer"></g>
+          <g id="node-layer"></g>
+        </svg>
+
+        <div class="graph-empty" id="graph-empty">
+          <p>No pages yet.</p>
+          <p class="graph-empty-sub">Add a page to begin, or load the example graph.</p>
+        </div>
+      </div>
+
+      <div class="links-row">
+        <span class="links-row-label">Links</span>
+        <ul class="chip-list" id="edge-chip-list" aria-live="polite"></ul>
+        <span class="chip-list-empty" id="edge-chip-empty">None yet</span>
+      </div>
+
+      <p class="form-message" id="graph-message" role="status" hidden></p>
+    </section>
+
+    <!-- ===================== MATRIX + CALCULATION ===================== -->
+    <div class="two-col">
+
+      <section class="panel" aria-labelledby="matrix-heading">
+        <div class="panel-head">
+          <div>
+            <h2 id="matrix-heading" class="panel-title">The matrix</h2>
+            <p class="panel-lede" id="matrix-lede">Each row represents a webpage. Probability is distributed among the pages it links to.</p>
+          </div>
+          <div class="tab-group" id="matrix-tabs" role="tablist" aria-label="Matrix type">
+            <button type="button" class="tab is-active" data-matrix="transition" role="tab" aria-selected="true">Transition</button>
+            <button type="button" class="tab" data-matrix="adjacency" role="tab" aria-selected="false">Adjacency</button>
+          </div>
+        </div>
+        <div id="matrix-container">
+          <p class="placeholder">Create a graph and calculate PageRank to see the mathematics.</p>
+        </div>
+      </section>
+
+      <section class="panel" aria-labelledby="calc-heading">
+        <div class="panel-head">
+          <div>
+            <h2 id="calc-heading" class="panel-title">PageRank calculation</h2>
+            <p class="panel-lede">How rank flows across the graph, and why it settles into an eigenvector.</p>
+          </div>
+        </div>
+        <div id="calc-container">
+          <p class="placeholder">Create a graph and calculate PageRank to see the mathematics.</p>
+        </div>
+      </section>
+
+    </div>
+
+    <!-- ===================== FINAL RANKING ===================== -->
+    <section class="panel" aria-labelledby="ranking-heading">
+      <div class="panel-head">
+        <div>
+          <h2 id="ranking-heading" class="panel-title">Final ranking</h2>
+          <p class="panel-lede">Pages ordered by their PageRank score. Hover a row to trace it back through the graph.</p>
+        </div>
+      </div>
+      <div id="ranking-container">
+        <p class="placeholder">Create a graph and calculate PageRank to see the mathematics.</p>
+      </div>
+    </section>
+
+  </main>
+
+  <footer class="site-footer">
+    <div class="wrap">
+      <p>Frontend renders whatever the PageRank service returns — it does not compute PageRank itself. <span id="data-source-note">Currently running on mock data.</span></p>
+    </div>
+  </footer>
+
+  <!-- Components load before app.js, which orchestrates them -->
+  <script src="components/api.js"></script>
+  <script src="components/graph.js"></script>
+  <script src="components/matrix.js"></script>
+  <script src="components/ranking.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>
